@@ -73,3 +73,5 @@ crashlytics-build.properties
 
 
 .vsconfig
+/[Aa]ssets/FBX.meta
+/[Aa]ssets/FBX/
