@@ -10,15 +10,9 @@ public class FPSController : MonoBehaviour
     [SerializeField]
     float moveSpeed = 5.0f;
 
-    [SerializeField]
-    float mass = 1.0f;
-
     CharacterController characterController;
-
     Transform cameraXForm;
-
     Vector3 velocity;
-
     Vector3 look;
 
     float GetMouseX()
@@ -55,7 +49,7 @@ public class FPSController : MonoBehaviour
         var input = new Vector3();
         input += transform.forward * y;
         input += transform.right * x;
-        input = Vector3.ClampMagnitude(input, 1.0f);
+        input = input.normalized;
 
         characterController.Move((input * moveSpeed + velocity) * Time.deltaTime);
     }
@@ -74,6 +68,8 @@ public class FPSController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+
         cameraXForm = transform.Find("CameraFPS");
 
         characterController = GetComponent<CharacterController>();
