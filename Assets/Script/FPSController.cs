@@ -10,8 +10,12 @@ public class FPSController : MonoBehaviour
     [SerializeField]
     float moveSpeed = 5.0f;
 
+    [SerializeField]
+    float jumpHeight = 1.0f;
+
     CharacterController characterController;
     Transform cameraXForm;
+    Vector3 velocity;
     Vector3 look;
 
     float GetMouseX()
@@ -34,6 +38,11 @@ public class FPSController : MonoBehaviour
         return UnityEngine.Input.GetAxisRaw("Horizontal");
     }
 
+    bool JumpButtonIsDown()
+    {
+        return UnityEngine.Input.GetButtonDown("Jump");
+    }
+
     void UpdateMovement()
     {
         var x = GetLeftRight();
@@ -44,7 +53,20 @@ public class FPSController : MonoBehaviour
         input += transform.right * x;
         input = input.normalized;
 
-        characterController.SimpleMove(input * moveSpeed);
+        if (characterController.isGrounded)
+        {
+            velocity.y = -1.0f;
+        }
+        else
+        {
+            velocity.y += Physics.gravity.y * Time.deltaTime;
+        }
+        if (JumpButtonIsDown() && characterController.isGrounded)
+        {
+            velocity.y += Mathf.Sqrt(jumpHeight * -3.0f * Physics.gravity.y);
+        }
+
+        characterController.Move((input * moveSpeed + velocity) * Time.deltaTime);
     }
 
     void UpdateLook()
