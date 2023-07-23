@@ -12,7 +12,6 @@ public class FPSController : MonoBehaviour
 
     CharacterController characterController;
     Transform cameraXForm;
-    Vector3 velocity;
     Vector3 look;
 
     float GetMouseX()
@@ -27,18 +26,12 @@ public class FPSController : MonoBehaviour
 
     float GetForwardBack()
     {
-        return UnityEngine.Input.GetAxis("Vertical");
+        return UnityEngine.Input.GetAxisRaw("Vertical");
     }
 
     float GetLeftRight()
     {
-        return UnityEngine.Input.GetAxis("Horizontal");
-    }
-
-    void UpdateGravity()
-    {
-        var gravity = Physics.gravity * Time.deltaTime;
-        velocity.y = characterController.isGrounded ? -1.0f : velocity.y + gravity.y;
+        return UnityEngine.Input.GetAxisRaw("Horizontal");
     }
 
     void UpdateMovement()
@@ -51,7 +44,7 @@ public class FPSController : MonoBehaviour
         input += transform.right * x;
         input = input.normalized;
 
-        characterController.Move((input * moveSpeed + velocity) * Time.deltaTime);
+        characterController.SimpleMove(input * moveSpeed);
     }
 
     void UpdateLook()
@@ -78,7 +71,6 @@ public class FPSController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateGravity();
         UpdateMovement();
         UpdateLook();
     }
